@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [ "${CODEBUILD_BUILD_SUCCEEDING}" != "1" ]
+then
+  exit
+fi
+
+echo Pushing the Docker image...
+ECS_REPO_NAME=aws-codebuild-docker-images
+docker tag $ECS_REPO_NAME $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECS_REPO_NAME:$BUILD_VERSION
+docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECS_REPO_NAME:$BUILD_VERSION
+docker tag $ECS_REPO_NAME $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECS_REPO_NAME:latest
+docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$ECS_REPO_NAME:latest

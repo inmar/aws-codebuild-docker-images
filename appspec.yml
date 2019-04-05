@@ -1,0 +1,5 @@
+version: 1
+
+app:
+  name: aws-codebuild-docker-images
+  ecr: aws-codebuild-docker-images

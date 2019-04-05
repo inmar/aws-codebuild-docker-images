@@ -1,7 +1,22 @@
 version: 0.2
 
 phases:
+  pre_build:
+    commands:
+      - echo Creating buildversion...
+      - BUILD_VERSION=$(date +%Y%m%d_%H%M%S)
+      - echo -n $BUILD_VERSION > buildversion
   build:
     commands:
-      - cd $CODEBUILD_SRC_DIR/ubuntu/standard/1.0
-      - docker build -t aws/codebuild/standard:1.0 .
+      # couldn't get standard 1.0 to build properly
+      # - cd $CODEBUILD_SRC_DIR/ubuntu/standard/1.0
+      # - docker build -t aws/codebuild/standard:1.0 .
+      - pushd $CODEBUILD_SRC_DIR/ubuntu/nodejs/10.14.1
+      - docker build -t aws/codebuild/nodejs:10.14.1 .
+      - popd
+      - pushd $CODEBUILD_SRC_DIR/inmar/eretail-inmart-web
+      - docker build -t codebuild/eretail-inmart-web .
+      - popd
+  post_build:
+    commands:
+      - bash codebuild/push_docker
